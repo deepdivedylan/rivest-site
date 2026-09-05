@@ -119,7 +119,7 @@ const formatUptime = (seconds: number) => {
     <main class="flex-grow flex flex-col items-center px-4 w-full max-w-6xl mx-auto space-y-8 pb-12">
       <!-- Large Logo Card -->
       <div class="w-full bg-gray-100 dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row items-center p-6 sm:p-10 text-center md:text-left transition-colors">
-        <img src="https://www.placecats.com/g/512/512" alt="Server Kitty" class="w-48 h-48 md:w-64 md:h-64 object-cover rounded-full shadow-md mb-6 md:mb-0 md:mr-10" />
+        <img src="/images/rivest-telemetry.jpg" alt="Server Kitty" class="w-48 h-48 md:w-64 md:h-64 object-cover rounded-full shadow-md mb-6 md:mb-0 md:mr-10" />
         <div>
           <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-2 text-gray-900 dark:text-white">
             {{ serverName }}
