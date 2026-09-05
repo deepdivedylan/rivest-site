@@ -74,6 +74,31 @@ const formatBytes = (bytes: number) => {
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
+
+const formatUptime = (seconds: number) => {
+  if (!seconds) return '0 seconds'
+  
+  const years = Math.floor(seconds / 31536000)
+  seconds %= 31536000
+  const months = Math.floor(seconds / 2592000)
+  seconds %= 2592000
+  const days = Math.floor(seconds / 86400)
+  seconds %= 86400
+  const hours = Math.floor(seconds / 3600)
+  seconds %= 3600
+  const minutes = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  
+  const parts = []
+  if (years > 0) parts.push(`${years} year${years !== 1 ? 's' : ''}`)
+  if (months > 0) parts.push(`${months} month${months !== 1 ? 's' : ''}`)
+  if (days > 0) parts.push(`${days} day${days !== 1 ? 's' : ''}`)
+  if (hours > 0) parts.push(`${hours} hour${hours !== 1 ? 's' : ''}`)
+  if (minutes > 0) parts.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`)
+  if (secs > 0) parts.push(`${secs} second${secs !== 1 ? 's' : ''}`)
+  
+  return parts.join(', ')
+}
 </script>
 
 <template>
@@ -109,21 +134,21 @@ const formatBytes = (bytes: number) => {
       <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Host Card -->
         <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md transition-colors flex flex-col">
-          <h2 class="text-2xl font-bold mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">Compute</h2>
+          <h2 class="text-2xl font-bold mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">💻 Compute</h2>
           <div v-if="hostData" class="space-y-3 flex-grow text-gray-800 dark:text-gray-200">
             <p><strong class="font-semibold">Load:</strong> {{ hostData.load.join(', ') }}</p>
             <p><strong class="font-semibold">RAM Used:</strong> {{ formatBytes(hostData.memory.used) }} / {{ formatBytes(hostData.memory.total) }}</p>
-            <p><strong class="font-semibold">Uptime:</strong> {{ Math.floor(hostData.uptime / 3600) }}h {{ Math.floor((hostData.uptime % 3600) / 60) }}m</p>
+            <p><strong class="font-semibold">Uptime:</strong> {{ formatUptime(hostData.uptime) }}</p>
           </div>
           <div v-else class="text-gray-500 italic flex-grow flex items-center">Awaiting subspace signals...</div>
         </div>
 
         <!-- Storage Card -->
         <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md transition-colors flex flex-col">
-          <h2 class="text-2xl font-bold mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">Storage Array</h2>
+          <h2 class="text-2xl font-bold mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">💾 Storage Array</h2>
           <div v-if="storageData" class="space-y-3 flex-grow text-gray-800 dark:text-gray-200">
             <p><strong class="font-semibold">Capacity:</strong> {{ formatBytes(storageData.capacity.used) }} / {{ formatBytes(storageData.capacity.total) }}</p>
-            <p><strong class="font-semibold">Free Space:</strong> {{ formatBytes(storageData.capacity.available) }}</p>
+            <p><strong class="font-semibold">Free Space:</strong> {{ formatBytes(storageData.capacity.available) }} ({{ Math.round((storageData.capacity.available / storageData.capacity.total) * 100) }}% free)</p>
             <div>
               <strong class="font-semibold block mb-1">SMART Health:</strong>
               <div class="flex flex-wrap gap-2">
@@ -140,7 +165,7 @@ const formatBytes = (bytes: number) => {
 
         <!-- UPS Card -->
         <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md transition-colors flex flex-col">
-          <h2 class="text-2xl font-bold mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">Power (UPS)</h2>
+          <h2 class="text-2xl font-bold mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">🔌 Power (UPS)</h2>
           <div v-if="upsData" class="space-y-3 flex-grow text-gray-800 dark:text-gray-200">
             <p><strong class="font-semibold">Status:</strong> {{ upsData.data.load.status }}</p>
             <p><strong class="font-semibold">Battery:</strong> {{ upsData.data.battery.charge_percent }}% ({{ Math.floor(upsData.data.battery.runtime_seconds / 60) }}m runtime)</p>
